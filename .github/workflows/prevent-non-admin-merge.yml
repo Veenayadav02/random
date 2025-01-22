@@ -2,7 +2,7 @@ name: Prevent Non-Admin Merges
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, closed]
+    types: [opened, synchronize, reopened, ready_for_review, closed, merged]
 
 jobs:
   check-admin:
@@ -12,6 +12,7 @@ jobs:
       - name: Check if the user is an admin
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.TOKEN }}  # Use the provided GitHub token
           script: |
             const prUser = context.payload.pull_request.user.login;
             
@@ -27,8 +28,8 @@ jobs:
 
             if (!isAdmin) {
               console.log(`User ${prUser} is not an admin. Blocking the merge.`);
-              // Fail the action if the user is not an admin
-              throw new Error('User does not have admin privileges to merge.');
+              // Fail the action explicitly to block the merge
+              core.setFailed('User does not have admin privileges to merge.');
             } else {
               console.log(`User ${prUser} is an admin. Merge allowed.`);
             }
