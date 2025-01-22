@@ -2,7 +2,7 @@ name: Prevent Non-Admin Merges
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, closed, merged]
+    types: [opened, synchronize, reopened, ready_for_review, closed]
 
 jobs:
   check-admin:
@@ -12,7 +12,6 @@ jobs:
       - name: Check if the user is an admin
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}  # Use the provided GitHub token
           script: |
             const prUser = context.payload.pull_request.user.login;
             
