@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Get the name of the branch being pushed
+branch_name=$(git symbolic-ref --short HEAD)
+
+# Check if the branch is 'master'
+if [ "$branch_name" = "master" ]; then
+  echo "Push to the 'master' branch is not allowed!"
+  exit 1  # This prevents the push
+fi
+
+# Allow push for other branches
+exit 0
