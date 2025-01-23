@@ -24,6 +24,7 @@ jobs:
 
             // Check if the user has admin privileges
             const isAdmin = collaborators.some(collaborator => collaborator.permissions.admin && collaborator.login === prUser);
+
             // Output the result
             if (!isAdmin) {
               console.log(User ${prUser} is not an admin. Blocking the merge.);
