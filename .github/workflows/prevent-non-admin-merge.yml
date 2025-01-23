@@ -22,8 +22,15 @@ jobs:
               affiliation: 'direct'
             });
 
+<<<<<<< HEAD
             // Check if the user has admin privileges
             const isAdmin = collaborators.some(collaborator => collaborator.permissions.admin && collaborator.login === prUser);
+=======
+    - name: Get user info
+      run: |
+        echo "User making the PR: ${{ github.actor }}"
+        ADMIN_USERS=("Veenayadav02")  # Add your GitHub username(s) here
+>>>>>>> fe543369503556ebc09345912c8a43c0bd62a07f
 
             // Output the result
             if (!isAdmin) {
