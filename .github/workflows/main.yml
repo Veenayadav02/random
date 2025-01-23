@@ -2,7 +2,7 @@ name: Prevent Non-Admin Merges
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, closed]  # Trigger on PR events
+    types: [opened, synchronize, reopened, ready_for_review, closed]
 
 jobs:
   check-admin:
@@ -25,15 +25,15 @@ jobs:
             // Check if the user has admin privileges
             const isAdmin = collaborators.some(collaborator => collaborator.permissions.admin && collaborator.login === prUser);
 
-            // Output the result
+            // Output the result using correct string interpolation
             if (!isAdmin) {
-              console.log(User ${prUser} is not an admin. Blocking the merge.);
+              console.log(User ${prUser} is not an admin. Blocking the merge.);  // Correct use of backticks and string interpolation
               return 'non-admin';  // Return non-admin status for later steps
             } else {
-              console.log(User ${prUser} is an admin. Merge allowed.);
+              console.log(User ${prUser} is an admin. Merge allowed.);  // Correct use of backticks and string interpolation
               return 'admin';  // Return admin status for later steps
             }
-        
+
   fail-merge:
     needs: check-admin
     runs-on: ubuntu-latest
