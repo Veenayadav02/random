@@ -1,7 +1,12 @@
 name: Basic Workflow Dispatch Example
 
 on:
-  workflow_dispatch:  # This allows the workflow to be manually triggered via the GitHub UI
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment (e.g., master, production)'
+        required: true
+        default: 'production'  # Default environment if no input is provided
 
 jobs:
   deploy:
@@ -11,5 +16,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2  # Checkout the code from the repository
 
+    - name: Display selected environment
+      run: |
+        echo "Deploying to the ${{ github.event.inputs.environment }} environment"
+    
     - name: Run deployment script
       run: echo "We did the thing!"  # Placeholder for actual deployment or script
