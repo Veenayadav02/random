@@ -1,18 +1,15 @@
-name: Manual Trigger Workflow with username
-#get username information
-on: 
-  workflow_dispatch:
-    inputs:
-      username:
-        description: 'select user'
-        default: ''
-        required: true
-        type: string
+name: Basic Workflow Dispatch Example
+
+on:
+  workflow_dispatch:  # This allows the workflow to be manually triggered via the GitHub UI
 
 jobs:
-  print-username:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
 
     steps:
-      - name: Print the username
-        run: echo The username is ${{ inputs.username }}
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Checkout the code from the repository
+
+    - name: Run deployment script
+      run: echo "We did the thing!"  # Placeholder for actual deployment or script
