@@ -33,7 +33,7 @@ jobs:
         echo "Branch: ${{ github.event.inputs.branch }}"
         echo "Secret Example (should be hidden): ${{ secrets.YOUR_SECRET_NAME }}"
       env:
-        YOUR_SECRET_NAME: ${{ vars.Fullname }}  # Add your secret here if needed
+        YOUR_SECRET_NAME: ${{ vars.FULLNAME }}  # Add your secret here if needed
 
     - name: Run deployment script
       run: echo "We did the thing!"  # Placeholder for actual deployment or script here
