@@ -1,15 +1,15 @@
-name: new Basic Workflow Dispatch Example
+name: Example
 
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to run the workflow on'
+        description: 'Branch to run the workflow on'  # This will appear in the UI
         required: false
-        default: 'dev'  # Default branch is set to 'dev'
+        default: 'master'  # Default branch is set to 'dev'
         type: string
       environment:
-        description: 'Choose the environment (e.g., master, production)'
+        description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
         required: true
         default: 'production'  # Default environment if no input is provided
         type: string
@@ -22,7 +22,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2  # Checkout the code from the repository
 
-    - name: Display selected environment
+    - name: Display selected branch and environment
       run: |
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
         echo "Using branch: ${{ github.event.inputs.branch }}"
