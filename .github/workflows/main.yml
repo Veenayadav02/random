@@ -27,5 +27,13 @@ jobs:
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
         echo "Using branch: ${{ github.event.inputs.branch }}"
 
+    - name: Display environment variables and secrets
+      run: |
+        echo "Environment: ${{ github.event.inputs.environment }}"
+        echo "Branch: ${{ github.event.inputs.branch }}"
+        echo "Secret Example (should be hidden): ${{ secrets.YOUR_SECRET_NAME }}"
+      env:
+        YOUR_SECRET_NAME: ${{ vars.Fullname }}  # Add your secret here if needed
+
     - name: Run deployment script
-      run: echo "We did the thing!"  # Placeholder for actual deployment or script
+      run: echo "We did the thing!"  # Placeholder for actual deployment or script here
