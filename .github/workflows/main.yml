@@ -1,4 +1,4 @@
-name: Example
+name: new sam
 
 on:
   workflow_dispatch:
@@ -17,6 +17,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
+    environment: ${{ github.event.inputs.environment }}  # Dynamically set the environment based on input
 
     steps:
     - name: Checkout repository
@@ -35,10 +36,10 @@ jobs:
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
-        echo "FULLNAME: "${{ vars.FULLNAME }}" ....." >> sample.txt  # Access the variable FULLNAME
-        
-    
 
+        # Accessing the FULLNAME from the environment context
+        echo "FULLNAME from ${GITHUB_ENV} context: ${{ vars.FULLNAME }}" >> sample.txt
+        
     - name: Display the contents of the file
       run: |
         cat sample.txt  # Print the file content to see the values
