@@ -35,7 +35,7 @@ jobs:
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
-        echo "FULLNAME: ${{ vars.FULLNAME }}" >> sample.txt  # Access the variable FULLNAME
+        echo "FULLNAME: "${{ vars.FULLNAME }}" ....." >> sample.txt  # Access the variable FULLNAME
         
     
 
