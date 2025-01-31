@@ -11,7 +11,7 @@ on:
       environment:
         description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
         required: true
-        default: 'production'  # Default environment if no input is provided
+        default: 'QA'  # Default environment if no input is provided
         type: string
 
 jobs:
@@ -27,15 +27,22 @@ jobs:
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
         echo "Using branch: ${{ github.event.inputs.branch }}"
 
-    - name: Display environment variables and secrets
+    - name: Set environment-specific variables and variables
       run: |
         echo "Environment: ${{ github.event.inputs.environment }}"
         echo "Branch: ${{ github.event.inputs.branch }}"
-        echo "Name Example : ${{ vars.FULLNAME }}"
-        echo "Full Name: $FULLNAME"
+        
+        # Save environment variable to file
+        echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
+        echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
+        echo "FULLNAME: $FULLNAME" >> sample.txt  # Access the variable FULLNAME
+        
       env:
-        YOUR_SECRET_NAME: ${{ vars.FULLNAME }}  # Add your secret here if needed
-       
+        FULLNAME: ${{ vars.FULLNAME }}  # Set the variable value for FULLNAME from the GitHub variable
+
+    - name: Display the contents of the file
+      run: |
+        cat sample.txt  # Print the file content to see the values
 
     - name: Run deployment script
       run: echo "We did the thing!"  # Placeholder for actual deployment or script here
