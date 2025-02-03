@@ -37,6 +37,7 @@ jobs:
 
         # Accessing the FULLNAME from the environment context
         echo "FULLNAME from ${GITHUB_ENV} context: ${{ vars.FULLNAME }}" >> sample.txt
+        echo"new from the vars of github :  ${{ vars.FULLNAME }}"
         
     - name: Display the contents of the file
       run: |
