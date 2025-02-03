@@ -1,18 +1,21 @@
 name: new sam
 
+
+If you don't want to specify the type: string for the inputs in the workflow_dispatch section, you can simply remove that line. The type field is optional, and if omitted, GitHub Actions will automatically treat the input as a string by default.
+
+Here’s your updated workflow_dispatch section without the type: string:
+
 on:
   workflow_dispatch:
     inputs:
       branch:
         description: 'Branch to run the workflow on'  # This will appear in the UI
         required: false
-        default: 'master'  # Default branch is set to 'dev'
-        type: string
+        default: 'dev'  # Default branch is set to 'dev'
       environment:
         description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
         required: true
         default: 'QA'  # Default environment if no input is provided
-        type: string
 
 jobs:
   deploy:
