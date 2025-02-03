@@ -4,7 +4,7 @@ on:
     inputs:
       branch:
         description: 'Branch to run the workflow on'  # This will appear in the UI
-        required: false
+        required: true
         default: 'dev'  # Default branch is set to 'dev'
       environment:
         description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
