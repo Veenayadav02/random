@@ -1,10 +1,4 @@
-name: new sam
-
-
-If you don't want to specify the type: string for the inputs in the workflow_dispatch section, you can simply remove that line. The type field is optional, and if omitted, GitHub Actions will automatically treat the input as a string by default.
-
-Here’s your updated workflow_dispatch section without the type: string:
-
+name: new
 on:
   workflow_dispatch:
     inputs:
