@@ -7,13 +7,6 @@ on:
         required: true
         default: 'QA'  
         type: string
-    branches:
-      - dev
- 
-      environment:
-        description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
-        required: true
-        default: 'QA'  # Default environment if no input is provided
 
 jobs:
   deploy:
