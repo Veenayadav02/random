@@ -2,10 +2,13 @@ name: new
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to run the workflow on'  # This will appear in the UI
+      environment:
+        description: 'Choose the environment (e.g., QA, production)' 
         required: true
-        default: 'dev'
+        default: 'QA'  
+        type: string
+    branches:
+      - dev
  
       environment:
         description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
@@ -37,7 +40,7 @@ jobs:
 
         # Accessing the FULLNAME from the environment context
         echo "FULLNAME from ${GITHUB_ENV} context: ${{ vars.FULLNAME }}" >> sample.txt
-        echo"new from the vars of github :  ${{ vars.FULLNAME }}"
+      
         
     - name: Display the contents of the file
       run: |
