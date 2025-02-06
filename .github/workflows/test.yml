@@ -3,29 +3,49 @@ name: test
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to run the workflow on'  # This will appear in the UI
-        required: false
-        default: 'master'  # Default branch is set to 'dev'
-        type: string
       environment:
-        description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
+        description: 'Choose the environment (e.g., QA, production)' 
         required: true
-        default: 'production'  # Default environment if no input is provided
+        default: 'QA'
         type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
+    environment: ${{ github.event.inputs.environment }}  # Dynamically set the environment based on input
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2  # Checkout the code from the repository
 
-    - name: Display selected branch and environment
+    - name: Display selected environment and branch
       run: |
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
-        echo "Using branch: ${{ github.event.inputs.branch }}"
+        echo "Using branch: ${{ github.ref }}"  # This will use the selected branch from the UI
+
+    - name: Validate branch and environment
+      run: |
+        if [[ "$GITHUB_REF" == "refs/heads/dev" && "${{ github.event.inputs.environment }}" != "QA" ]]; then
+          echo "Error: The 'dev' branch should be deployed to the 'QA' environment."
+          exit 1  # This will stop the job if the condition is not met
+        elif [[ "$GITHUB_REF" == "refs/heads/master" && "${{ github.event.inputs.environment }}" != "production" ]]; then
+          echo "Error: The 'master' branch should be deployed to the 'production' environment."
+          exit 1  # This will stop the job if the condition is not met
+        fi
+
+    - name: Set environment-specific variables
+      run: |
+        echo "Environment: ${{ github.event.inputs.environment }}"
+        echo "Branch: ${{ github.ref }}"
+
+        # Save environment variable to file
+        echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
+        echo "Selected Branch: ${{ github.ref }}" >> sample.txt
+        echo "FULLNAME from env : ${{ vars.FULLNAME }}" >> sample.txt
+
+    - name: Display the contents of the file
+      run: |
+        cat sample.txt  # Print the file content to see the values
 
     - name: Run deployment script
-      run: echo "We did the thing!"  # Placeholder for actual deployment or script
+      run: echo "We did the thing!"  # Placeholder for actual deployment or script here
