@@ -1,4 +1,4 @@
-name: new
+name: new if
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
     if: |
       (github.event.inputs.branch == 'master' && github.event.inputs.environment == 'production') ||
       (github.event.inputs.branch == 'dev' && github.event.inputs.environment == 'QA') ||
-      (github.event.inputs.branch != 'master' && github.event.inputs.branch != 'dev')  # Trigger build for other branches
+      (github.event.inputs.branch != 'master' && github.event.inputs.branch != 'dev')
 
     steps:
     - name: Checkout repository
@@ -32,8 +32,7 @@ jobs:
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
-
-        # Accessing the FULLNAME from the environment context
+        # Accessing the FULLNAME from the GitHub context
         echo "FULLNAME from GitHub context: ${{ github.repository }}" >> sample.txt
       
     - name: Display the contents of the file
