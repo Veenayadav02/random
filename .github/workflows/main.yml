@@ -32,7 +32,7 @@ jobs:
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
 
         # Accessing the FULLNAME from the environment context
-        echo "FULLNAME from ${GITHUB_ENV} context: ${{ vars.FULLNAME }}" >> sample.txt
+        echo "FULLNAME from env : ${{ vars.FULLNAME }}" >> sample.txt
       
         
     - name: Display the contents of the file
