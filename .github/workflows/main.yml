@@ -3,11 +3,7 @@ name: new
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Choose the branch (e.g., dev, master, etc.)'  
-        required: true
-        default: 'dev'  # Default branch set to 'dev'
-        type: string
+      
 
       environment:
         description: 'Choose the environment (e.g., QA, production)' 
