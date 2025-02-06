@@ -1,8 +1,13 @@
-name: new if
+name: new
 
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: 'Choose the branch (e.g., dev, master, etc.)'  
+        required: true
+        default: 'dev'  # Default branch set to 'dev'
+        type: string
       environment:
         description: 'Choose the environment (e.g., QA, production)' 
         required: true
@@ -14,11 +19,10 @@ jobs:
     runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
     environment: ${{ github.event.inputs.environment }}  # Dynamically set the environment based on input
 
-    # The job will only run if the following conditions are met
+    # The job will only run if these conditions are met:
     if: |
-      (github.event.inputs.branch == 'master' && github.event.inputs.environment == 'production') ||
       (github.event.inputs.branch == 'dev' && github.event.inputs.environment == 'QA') ||
-      (github.event.inputs.branch != 'master' && github.event.inputs.branch != 'dev')
+      (github.event.inputs.branch == 'master' && github.event.inputs.environment == 'production')
 
     steps:
     - name: Checkout repository
@@ -27,13 +31,18 @@ jobs:
     - name: Display selected branch and environment
       run: |
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
-        echo "Using branch: ${{ github.event.inputs.branch }}"
+        echo "Using branch: ${{ github.event.inputs.branch }}"  # Now this should work
 
+    - name: Set environment-specific variables and variables
+      run: |
+        echo "Environment: ${{ github.event.inputs.environment }}"
+        echo "Branch: ${{ github.event.inputs.branch }}"
+        
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
-        # Accessing the FULLNAME from the GitHub context
-        echo "FULLNAME from GitHub context: ${{ github.repository }}" >> sample.txt
+        # Accessing the FULLNAME from the environment context
+        echo "FULLNAME from env : ${{ github.repository }}" >> sample.txt
       
     - name: Display the contents of the file
       run: |
