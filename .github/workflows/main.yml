@@ -1,21 +1,23 @@
+
 name: new
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to run the workflow on'  # This will appear in the UI
-        required: true
-        default: 'dev'  # Default branch is set to 'dev'
       environment:
-        description: 'Choose the environment (e.g., master, production)'  # This will also appear in the UI
+        description: 'Choose the environment (e.g., QA, production)' 
         required: true
-        default: 'QA'  # Default environment if no input is provided
+        default: 'QA'  
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
     environment: ${{ github.event.inputs.environment }}  # Dynamically set the environment based on input
-
+      if: |
+      (github.event.inputs.branch == 'master' && github.event.inputs.environment == 'production') ||
+      (github.event.inputs.branch == 'dev' && github.event.inputs.environment == 'QA') ||
+      (github.event.inputs.branch != 'master' && github.event.inputs.branch != 'dev')  # Trigger build for other branches
+	  
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2  # Checkout the code from the repository
@@ -25,18 +27,15 @@ jobs:
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
         echo "Using branch: ${{ github.event.inputs.branch }}"
 
-    - name: Set environment-specific variables and variables
-      run: |
-        echo "Environment: ${{ github.event.inputs.environment }}"
-        echo "Branch: ${{ github.event.inputs.branch }}"
-        
+      
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
 
         # Accessing the FULLNAME from the environment context
-        echo "FULLNAME from context: ${{ vars.FULLNAME }}" >> sample.txt
-          
+        echo "FULLNAME from env : ${{ vars.FULLNAME }}" >> sample.txt
+      
+        
     - name: Display the contents of the file
       run: |
         cat sample.txt  # Print the file content to see the values
