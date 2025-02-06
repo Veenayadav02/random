@@ -1,5 +1,5 @@
-
 name: new
+
 on:
   workflow_dispatch:
     inputs:
@@ -13,11 +13,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest  # The runner will be an Ubuntu environment
     environment: ${{ github.event.inputs.environment }}  # Dynamically set the environment based on input
-      if: |
+
+    # The job will only run if the following conditions are met
+    if: |
       (github.event.inputs.branch == 'master' && github.event.inputs.environment == 'production') ||
       (github.event.inputs.branch == 'dev' && github.event.inputs.environment == 'QA') ||
       (github.event.inputs.branch != 'master' && github.event.inputs.branch != 'dev')  # Trigger build for other branches
-	  
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2  # Checkout the code from the repository
@@ -27,15 +29,13 @@ jobs:
         echo "Deploying to the ${{ github.event.inputs.environment }} environment"
         echo "Using branch: ${{ github.event.inputs.branch }}"
 
-      
         # Save environment variable to file
         echo "Selected Environment: ${{ github.event.inputs.environment }}" >> sample.txt
         echo "Selected Branch: ${{ github.event.inputs.branch }}" >> sample.txt
 
         # Accessing the FULLNAME from the environment context
-        echo "FULLNAME from env : ${{ vars.FULLNAME }}" >> sample.txt
+        echo "FULLNAME from GitHub context: ${{ github.repository }}" >> sample.txt
       
-        
     - name: Display the contents of the file
       run: |
         cat sample.txt  # Print the file content to see the values
