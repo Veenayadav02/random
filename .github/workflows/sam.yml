@@ -1,0 +1,78 @@
+name: Workflow yaml file for frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment (e.g., QA, production)'  # This will also appear in the UI
+        required: true
+        default: 'QA'  # Default environment if no input is provided
+        type: string
+
+jobs:
+  build_and_deploy_job:
+    if: |
+      (github.ref == 'refs/heads/dev' && github.event.inputs.environment == 'QA') ||
+      (github.ref == 'refs/heads/main' && github.event.inputs.environment == 'production')
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    name: Build and Deploy Job
+
+    env:
+      NODE_VERSION: 20.18.0
+      NPM_VERSION: 10.8.2
+      ACTIONS_RUNNER_DEBUG: 'true'
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - name: Display selected branch and environment
+        run: |
+          echo "Building for the ${{ github.event.inputs.environment }} environment"
+          echo "Using branch: ${{ github.ref }}"
+     
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set npm version
+        run: npm install -g npm@${{ env.NPM_VERSION }}
+
+      - name: Create .env file dynamically
+        run: |
+          echo "GENERATE_SOURCEMAP=${{ vars.GENERATE_SOURCEMAP }}" >> .env
+          echo "HTTPS=${{ vars.HTTPS }}" >> .env
+          echo "NEXT_PUBLIC_APP_BASE_URL=${{ secrets.NEXT_PUBLIC_APP_BASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_DOMAIN=${{ secrets.NEXT_PUBLIC_DOMAIN }}" >> .env
+          echo "NEXT_PUBLIC_REMOTE_SERVICE_BASE_URL=${{ secrets.NEXT_PUBLIC_REMOTE_SERVICE_BASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_LIVEKIT_URL=${{ secrets.LIVEKIT_URL }}" >> .env
+
+      - name: Install dependencies and build project
+        run: |
+          npm install --legacy-peer-deps
+          npm prune
+          npm run build
+
+      - name: Removing cache folder
+        run: |
+          rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache
+
+      - name: Calculate Build Size
+        run: |
+          echo "Calculating build size..."
+          du -sh .next | awk '{print "Build Size: "$1}'
+          du -s .next | awk '{print "Build Size in KB: "$1}'
+          echo "Total MB size:" $(( $(du -s .next | awk '{print $1}') / 1024 )) "MB"
+
+      - name: Install Azure Static Web Apps CLI
+        run: |
+          npm install -g @azure/static-web-apps-cli
+          swa --version
+
+      - name: Deploy to Azure Static Web Apps
+        run: |
+          swa deploy --deployment-token ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN  }} \
+          ./out --env production
