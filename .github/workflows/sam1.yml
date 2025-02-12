@@ -1,13 +1,6 @@
 name: sam1
 
-on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Choose the environment (e.g., QA, production)' 
-        required: true
-        default: 'QA'
-        type: string
+on: []
 
 jobs:
   deploy:
